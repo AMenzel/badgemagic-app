@@ -127,7 +127,8 @@ class BadgeMessageProvider {
       Map<String, dynamic>? jsonData,
       bool isSavedBadge,
       BuildContext context,
-      {TextStyle? textStyle}) async {
+      {TextStyle? textStyle,
+      Brightness brightness = Brightness.hundred}) async {
     if (await FlutterBluePlus.isSupported == false) {
       final l10n = GetIt.instance.get<LocalizationService>().l10n;
       ToastUtils().showErrorToast(l10n.error);
@@ -232,7 +233,8 @@ class BadgeMessageProvider {
       }
     } else {
       data = await generateData(
-          text, flash, marq, isInverted, speedMap[speed], mode, jsonData);
+          text, flash, marq, isInverted, speedMap[speed], mode, jsonData,
+          brightness: brightness);
     }
 
     DataTransferManager manager = DataTransferManager(data);
