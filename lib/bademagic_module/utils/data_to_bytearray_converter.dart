@@ -212,7 +212,9 @@ class DataToByteArrayConverter {
     // Byte 4: Reserved (0x00)
     // Byte 5: Brightness value
     String byte4 = "00";
-    String byte5 = int.parse(data.brightness.hexValue).toRadixString(16).padLeft(2, '0');
+    // Parse hex string like "0x40" correctly by removing "0x" prefix
+    String hexValue = data.brightness.hexValue.substring(2); // Remove "0x" prefix
+    String byte5 = hexValue.padLeft(2, '0');
     String result = byte4 + byte5;
     logger.d("Get brightness = $result");
     return result;
