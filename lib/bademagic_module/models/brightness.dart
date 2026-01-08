@@ -1,8 +1,8 @@
 enum Brightness {
-  twentyFive('0x00', 25),
-  fifty('0x10', 50),
-  seventyFive('0x20', 75),
-  hundred('0x40', 100);
+  twentyFive('0x30', 25),
+  fifty('0x20', 50),
+  seventyFive('0x10', 75),
+  hundred('0x00', 100);
 
   final String hexValue;
   final int percentage;
