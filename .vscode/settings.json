@@ -2,5 +2,6 @@
     "[dart]": {
         "editor.defaultFormatter": "Dart-Code.dart-code",
         "editor.formatOnSave": true,
-    }
+    },
+    "cmake.sourceDirectory": "/Users/andreas/dev/own/badge-brightness/badgemagic-app/linux"
 }
