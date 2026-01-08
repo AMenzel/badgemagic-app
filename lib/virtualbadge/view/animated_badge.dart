@@ -25,8 +25,12 @@ class _AnimationBadgeState extends State<AnimationBadge> {
     final animationProvider = context.watch<AnimationBadgeProvider>();
     final brightnessProvider = context.watch<BrightnessProvider>();
     
-    // Convert brightness percentage to opacity (25% -> 0.25, 100% -> 1.0)
-    final brightnessOpacity = brightnessProvider.getBrightnessPercentage() / 100.0;
+    // Map brightness percentage to a UI-friendly opacity range
+    // Physical badge: 25%->0x30, 50%->0x20, 75%->0x10, 100%->0x00
+    // UI simulation: 25%->0.6, 50%->0.75, 75%->0.85, 100%->1.0
+    // This makes lower brightness levels more visible in the UI while still showing clear differences
+    final percentage = brightnessProvider.getBrightnessPercentage();
+    final brightnessOpacity = 0.5 + (percentage / 100.0 * 0.5); // Maps 25%->0.625, 100%->1.0
     
     return AspectRatio(
       aspectRatio: 3.2,
