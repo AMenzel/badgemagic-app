@@ -21,44 +21,44 @@ void main() {
 
     // Check header: wang (0x77, 0x61, 0x6E, 0x67)
     expect(result[0].sublist(0, 4), [0x77, 0x61, 0x6E, 0x67]);
-    // Check brightness bytes: 0x00 (reserved), 0x00 (100% brightness)
-    expect(result[0].sublist(4, 6), [0x00, 0x00]);
+    // Check brightness bytes: 0x00 (reserved), 0x40 (100% brightness - INVERTED)
+    expect(result[0].sublist(4, 6), [0x00, 0x40]);
   });
 
   test('brightness byte should reflect the brightness setting', () {
     DataToByteArrayConverter converter = DataToByteArrayConverter();
     
-    // Test 100% brightness (0x00)
+    // Test 100% brightness (0x40) - INVERTED from Python reference
     var data100 = Data(
       brightness: Brightness.hundred,
       messages: [Message(text: ['A'])],
     );
     var result100 = converter.convert(data100);
-    expect(result100[0][5], 0x00);
+    expect(result100[0][5], 0x40);
 
-    // Test 75% brightness (0x10)
+    // Test 75% brightness (0x20) - INVERTED from Python reference
     var data75 = Data(
       brightness: Brightness.seventyFive,
       messages: [Message(text: ['A'])],
     );
     var result75 = converter.convert(data75);
-    expect(result75[0][5], 0x10);
+    expect(result75[0][5], 0x20);
 
-    // Test 50% brightness (0x20)
+    // Test 50% brightness (0x10) - INVERTED from Python reference
     var data50 = Data(
       brightness: Brightness.fifty,
       messages: [Message(text: ['A'])],
     );
     var result50 = converter.convert(data50);
-    expect(result50[0][5], 0x20);
+    expect(result50[0][5], 0x10);
 
-    // Test 25% brightness (0x40)
+    // Test 25% brightness (0x00) - INVERTED from Python reference
     var data25 = Data(
       brightness: Brightness.twentyFive,
       messages: [Message(text: ['A'])],
     );
     var result25 = converter.convert(data25);
-    expect(result25[0][5], 0x40);
+    expect(result25[0][5], 0x00);
   });
 
   test('flash should be 0x00 when no messages have flash option enabled', () {
