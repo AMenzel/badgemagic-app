@@ -1,5 +1,6 @@
 import 'package:badgemagic/bademagic_module/models/brightness.dart';
 import 'package:badgemagic/constants.dart';
+import 'package:badgemagic/providers/animation_badge_provider.dart';
 import 'package:badgemagic/providers/brightness_provider.dart';
 import 'package:badgemagic/services/localization_service.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,10 @@ class _BrightnessControlState extends State<BrightnessControl> {
   @override
   Widget build(BuildContext context) {
     final brightnessProvider = Provider.of<BrightnessProvider>(context);
+    final animationProvider = Provider.of<AnimationBadgeProvider>(context);
     final l10n = GetIt.instance.get<LocalizationService>().l10n;
+    
+    final bool isAnimationActive = animationProvider.isSpecialAnimationSelected();
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -26,14 +30,38 @@ class _BrightnessControlState extends State<BrightnessControl> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Brightness: ${brightnessProvider.getBrightnessPercentage()}%',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: colorPrimaryDark,
-            ),
+          Row(
+            children: [
+              Text(
+                '${l10n.brightness}: ${brightnessProvider.getBrightnessPercentage()}%',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: isAnimationActive ? Colors.grey : colorPrimaryDark,
+                ),
+              ),
+              if (isAnimationActive) ...[
+                SizedBox(width: 8.w),
+                Icon(
+                  Icons.info_outline,
+                  size: 16.sp,
+                  color: Colors.grey,
+                ),
+              ],
+            ],
           ),
+          if (isAnimationActive)
+            Padding(
+              padding: EdgeInsets.only(top: 4.h),
+              child: Text(
+                l10n.brightnessNotAvailableForAnimations,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: Colors.grey.shade600,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
           SizedBox(height: 8.h),
           Row(
             children: [
@@ -43,10 +71,10 @@ class _BrightnessControlState extends State<BrightnessControl> {
                   min: 25,
                   max: 100,
                   divisions: 3,
-                  activeColor: colorPrimaryDark,
+                  activeColor: isAnimationActive ? Colors.grey : colorPrimaryDark,
                   inactiveColor: backCircleColor,
                   label: '${brightnessProvider.getBrightnessPercentage()}%',
-                  onChanged: (value) {
+                  onChanged: isAnimationActive ? null : (value) {
                     setState(() {
                       brightnessProvider.setBrightness(
                         Brightness.fromPercentage(value.toInt()),
